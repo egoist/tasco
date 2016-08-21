@@ -113,12 +113,28 @@ Whether to generate source maps. Set `map` to `inline` to generate inline source
 
 ### JavaScript Only
 
+Default bundle format is `IIFE` with a random `moduleName`.
+
+#### umd
+
+Type: `string`<br>
+Required: `false`
+
+Specific the `moduleName` which is used in `UMD` mode.
+
+#### cjs
+
+Type: `boolean`<br>
+Required: `false`
+
+Whether to bundle in `CommonJS` format.
+
 #### moduleName
 
 Type: `string`<br>
 Required: `false`
 
-If `moduleName` is provided the bundle will be generated in UMD format and give it the `moduleName`, otherwise `CommonJS` format is used.
+Specific the `moduleName` which is used in `iife` mode.
 
 #### buble
 
