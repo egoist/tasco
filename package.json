@@ -62,6 +62,7 @@
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-buble": "^0.13.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "sugarss": "^0.1.5"
+    "sugarss": "^0.1.5",
+    "update-notifier": "^1.0.2"
   }
 }

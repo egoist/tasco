@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 const meow = require('meow')
+const update = require('update-notifier')
 const main = require('./lib')
 
 const cli = meow(`
@@ -18,6 +19,8 @@ const cli = meow(`
     V: 'verbose'
   }
 })
+
+update({pkg: cli.pkg}).notify()
 
 const options = cli.flags
 options.task = cli.input[0]
