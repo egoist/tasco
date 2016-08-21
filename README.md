@@ -8,6 +8,14 @@
   <a href="https://circleci.com/gh/egoist/tasco"><img src="https://img.shields.io/circleci/project/egoist/tasco/master.svg?style=flat-square" alt="Build Status"></a>
 </p>
 
+## tl;dr
+
+|task|support|
+|---|---|
+|js|rollup, babel or buble, es2015, stage-1|
+|css|postcss with precss and autoprefixer, you can also enable `sugarss`|
+|html|pug (formerly jade)|
+
 ## Install
 
 ```bash
