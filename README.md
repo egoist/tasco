@@ -82,11 +82,13 @@ The dest directory.
 
 #### watch
 
-Type: `string` `array` `glob patterns`<br>
+Type: `string` `array` `glob patterns` `boolean`<br>
 Required: `false`<br>
 Default: `path.dirname(entry)`
 
 If you run tasco with `--watch` tasco will watch the files/dirs you specific in this property. By default it's the dirname of entry file.
+
+Set to `false` to disable watch the this task.
 
 #### rename
 
