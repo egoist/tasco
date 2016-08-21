@@ -47,7 +47,24 @@ Currently only three types of task you can run: `js` `css` `html`, you can run `
 
 ## API
 
-### Common Properties
+### Top level properties
+
+For example, `build` is a top level property:
+
+```json
+{
+  "build": ["js", "css"]
+}
+```
+
+#### build
+
+Type: `array`<br>
+Default: `['js', 'css', 'html']`
+
+The tasks to run in `tasco build`.
+
+### Task Properties
 
 #### entry
 
