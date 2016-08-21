@@ -1,0 +1,18 @@
+{
+  "js": {
+    "entry": "./test/fixture.js",
+    "rename": "hahaha.js",
+    "dest": "./dist",
+    "watch": "./test/*.js",
+    "map": true
+  },
+  "css": {
+    "entry": "./test/fixture.css",
+    "rename": "lol.css",
+    "dest": "./dist"
+  },
+  "html": {
+    "entry": "./test/fixture.jade",
+    "dest": "./dist"
+  }
+}
