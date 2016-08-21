@@ -1,6 +1,6 @@
 {
   "name": "tasco",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Build tool for the HTML/CSS/JavaScript",
   "license": "MIT",
   "repository": "egoist/tasco",
