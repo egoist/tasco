@@ -2,6 +2,7 @@
 import { parse, Option } from "tinyargs"
 import * as colors from "colorette"
 import { version } from "../package.json"
+import { helpTable } from "./utils"
 
 async function main() {
   const options: Option<unknown>[] = [
@@ -21,6 +22,11 @@ async function main() {
       name: "ifPresent",
       flags: ["if-present"],
       type: Boolean,
+    },
+    {
+      name: "waitOnOutput",
+      flags: ["wait-on-output"],
+      type: String,
     },
     { name: "command", positional: true, type: String, optionalValue: true },
     {
@@ -53,6 +59,7 @@ async function main() {
       filter: cli.filter,
       forwardArgs: cli._,
       ifPresent: cli.ifPresent,
+      waitOnOutput: cli.waitOnOutput,
     })
   } else if (cli.command === "help") {
     if (cli.commandName === "run") {
@@ -84,17 +91,38 @@ Usage:
   $ tasco run [...tasco_flags] [script] [...forward_args]
 
 Flags:
-  ${colors.bold(
-    `-f, --filter <filter>`
-  )}   Filter packages in current workspace, supports glob patterns, can be multiple
-                          The filter is matched against package name, rather than directory name
 
-                          Examples:
-                            --filter @scope/*
-                            --filter **ui**
-                            --filter my-package --filter @scope/*
-  ${colors.bold(`--if-present`)}            Only run the script if it exists
-                          without this flag tasco will throw an error if the script does not exist
+${helpTable([
+  [
+    `  -f, --filter <filter>`,
+    [
+      `Filter packages in current workspace, supports glob patterns, can be multiple`,
+      `The filter is matched against package name, rather than directory name`,
+      ``,
+      `Examples:`,
+      `  --filter @scope/*`,
+      `  --filter my-package --filter @scope/*`,
+    ],
+  ],
+  [
+    `  --if-present`,
+    [
+      `Only run the script if it exists`,
+      `without this flag tasco will throw an error if the script does not exist`,
+    ],
+  ],
+  [
+    `  --wait-on-output <string>`,
+    [
+      `Wait for the command output to contain the string to execute the next script`,
+      `useful for development with a watcher`,
+      ``,
+      `Examples:`,
+      `  --wait-on-output "built successfully"`,
+    ],
+  ],
+])}
+
 `
 
 main()

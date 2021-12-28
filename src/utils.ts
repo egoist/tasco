@@ -1,4 +1,5 @@
 import path from "path"
+import stripAnsi from "strip-ansi"
 import * as colors from "colorette"
 
 export const formatScriptLog = (
@@ -14,5 +15,26 @@ export const formatScriptLog = (
   )
 }
 
+const fillRight = (text: string, width: number) => {
+  return text + ` `.repeat(width - stripAnsi(text).length)
+}
+
 export const arraify = <T>(value: T | T[]): T[] =>
   Array.isArray(value) ? value : [value]
+
+export const helpTable = (array: [string, string[]][]) => {
+  const longest = array.reduce((max, item) => {
+    return item[0].length > max ? item[0].length : max
+  }, 0)
+  const width = longest + 4
+  return array
+    .map((item) => {
+      return item[1]
+        .map((line, i) => {
+          if (i === 0) return fillRight(colors.bold(item[0]), width) + line
+          return fillRight("", width) + line
+        })
+        .join("\n")
+    })
+    .join("\n\n")
+}

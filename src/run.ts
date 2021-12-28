@@ -2,6 +2,8 @@ import path from "path"
 import { execaCommand } from "execa"
 import glob from "fast-glob"
 import globRegex from "glob-regex"
+import * as colors from "colorette"
+import stripAnsi from "strip-ansi"
 import { arraify, formatScriptLog } from "./utils"
 import { joycon } from "./config-loader"
 import { listScripts } from "./list"
@@ -82,9 +84,17 @@ const runScript = async (opts: {
    */
   ifPresent?: boolean
   alreadyRun: Set<string>
+  waitOnOutput?: string
 }) => {
-  const { pkg, scriptName, allPackages, forwardArgs, ifPresent, alreadyRun } =
-    opts
+  const {
+    pkg,
+    scriptName,
+    allPackages,
+    forwardArgs,
+    ifPresent,
+    alreadyRun,
+    waitOnOutput,
+  } = opts
 
   if (alreadyRun.has(pkg.manifest.name)) return
   alreadyRun.add(pkg.manifest.name)
@@ -111,12 +121,47 @@ const runScript = async (opts: {
         scriptName + ": " + args.join(" ")
       )
     )
-    await execaCommand(args.join(" "), {
-      stdio: "inherit",
+    const cmd = execaCommand(args.join(" "), {
+      stdio: "pipe",
       cwd: pkg.dir,
       preferLocal: true,
       shell: true,
+      env: {
+        FORCE_COLOR: process.env.FORCE_COLOR === "0" ? undefined : "1",
+      },
     })
+
+    let waitOnOutputPromise: Promise<void> | void
+    let resolveWaitOnOutput = () => {}
+
+    if (waitOnOutput) {
+      waitOnOutputPromise = new Promise((resolve) => {
+        resolveWaitOnOutput = resolve
+      })
+    }
+
+    const outputData = (data: any, type: "stdout" | "stderr") => {
+      const stream = type === "stderr" ? process.stderr : process.stdout
+      stream.write(colors.cyan(colors.bold(pkg.manifest.name)) + " ")
+      stream.write(data)
+
+      if (waitOnOutput && stripAnsi(data.toString()).includes(waitOnOutput)) {
+        resolveWaitOnOutput()
+      }
+    }
+
+    cmd.stdout!.on("data", (data) => {
+      outputData(data, "stdout")
+    })
+
+    cmd.stderr!.on("data", (data) => {
+      outputData(data, "stderr")
+    })
+
+    await Promise.all([
+      waitOnOutputPromise,
+      scriptName !== "dev" && (await cmd),
+    ])
   } else {
     if (!ifPresent) {
       throw new TascoError(`No script named ${scriptName} in ${pkg.dir}`)
@@ -159,7 +204,13 @@ export const run = async (
     filter,
     forwardArgs,
     ifPresent,
-  }: { filter?: string | string[]; forwardArgs?: string[]; ifPresent?: boolean }
+    waitOnOutput,
+  }: {
+    filter?: string | string[]
+    forwardArgs?: string[]
+    ifPresent?: boolean
+    waitOnOutput?: string
+  }
 ) => {
   const allPackages = await getAllPackages()
 
@@ -190,6 +241,7 @@ export const run = async (
       forwardArgs,
       ifPresent,
       alreadyRun,
+      waitOnOutput,
     })
   }
 }
