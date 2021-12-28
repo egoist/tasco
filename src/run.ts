@@ -1,6 +1,5 @@
 import path from "path"
-import fs from "fs"
-import { execa } from "execa"
+import { execaCommand } from "execa"
 import glob from "fast-glob"
 import globRegex from "glob-regex"
 import { arraify, formatScriptLog } from "./utils"
@@ -112,10 +111,11 @@ const runScript = async (opts: {
         scriptName + ": " + args.join(" ")
       )
     )
-    await execa("sh", ["-c", ...args], {
+    await execaCommand(args.join(" "), {
       stdio: "inherit",
       cwd: pkg.dir,
       preferLocal: true,
+      shell: true,
     })
   } else {
     if (!ifPresent) {
