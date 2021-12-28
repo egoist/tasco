@@ -17,6 +17,11 @@ async function main() {
       type: String,
       multiple: true,
     },
+    {
+      name: "ifPresent",
+      flags: ["if-present"],
+      type: Boolean,
+    },
     { name: "command", positional: true, type: String, optionalValue: true },
     {
       name: "script",
@@ -44,7 +49,11 @@ async function main() {
 
   if (cli.command === "run") {
     const { run } = await import("./run")
-    await run(cli.script, { filter: cli.filter, forwardArgs: cli._ })
+    await run(cli.script, {
+      filter: cli.filter,
+      forwardArgs: cli._,
+      ifPresent: cli.ifPresent,
+    })
   } else if (cli.command === "help") {
     if (cli.commandName === "run") {
       console.log(RunCommandHelp)
@@ -84,6 +93,8 @@ Flags:
                             --filter @scope/*
                             --filter **ui**
                             --filter my-package --filter @scope/*
+  ${colors.bold(`--if-present`)}            Only run the script if it exists
+                          without this flag tasco will throw an error if the script does not exist
 `
 
 main()

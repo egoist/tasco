@@ -81,17 +81,11 @@ const runScript = async (opts: {
   /**
    * Only run the script if the script is present, otherwise throw an error.
    */
-  ifPresent?: true
-  alreadyRun?: Set<string>
+  ifPresent?: boolean
+  alreadyRun: Set<string>
 }) => {
-  const {
-    pkg,
-    scriptName,
-    allPackages,
-    forwardArgs,
-    ifPresent,
-    alreadyRun = new Set(),
-  } = opts
+  const { pkg, scriptName, allPackages, forwardArgs, ifPresent, alreadyRun } =
+    opts
 
   if (alreadyRun.has(pkg.manifest.name)) return
   alreadyRun.add(pkg.manifest.name)
@@ -121,10 +115,11 @@ const runScript = async (opts: {
     await execa("sh", ["-c", ...args], {
       stdio: "inherit",
       cwd: pkg.dir,
+      preferLocal: true,
     })
   } else {
     if (!ifPresent) {
-      throw new Error(`No script named ${scriptName}`)
+      throw new TascoError(`No script named ${scriptName} in ${pkg.dir}`)
     }
   }
 }
@@ -163,7 +158,8 @@ export const run = async (
   {
     filter,
     forwardArgs,
-  }: { filter?: string | string[]; forwardArgs?: string[] }
+    ifPresent,
+  }: { filter?: string | string[]; forwardArgs?: string[]; ifPresent?: boolean }
 ) => {
   const allPackages = await getAllPackages()
 
@@ -184,12 +180,16 @@ export const run = async (
     return
   }
 
+  const alreadyRun: Set<string> = new Set()
+
   for (const pkg of packagesToRun) {
     await runScript({
       pkg,
       scriptName,
       allPackages,
       forwardArgs,
+      ifPresent,
+      alreadyRun,
     })
   }
 }
