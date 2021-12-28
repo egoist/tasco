@@ -1,5 +1,8 @@
 ## Unreleased
 
+
+## 0.4.3
+
 - Add `--wait-on-output <string>` flag
 
 ## 0.4.2
