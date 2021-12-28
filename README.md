@@ -13,7 +13,7 @@ If you want more robust solutions, please check out [Turbo](https://turborepo.or
 ## Installation
 
 ```bash
-npm i tasco -D
+npm i tasco -g
 ```
 
 ## Usage
