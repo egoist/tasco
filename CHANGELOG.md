@@ -1,5 +1,9 @@
 ## Unreleased
 
+No unreleased changes.
+
+## 0.4.5
+
 - Try to add missing files again
 
 ## 0.4.4
