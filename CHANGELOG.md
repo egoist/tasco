@@ -1,6 +1,6 @@
 ## Unreleased
 
-No unreleased changes.
+- Try to add missing files again
 
 ## 0.4.4
 

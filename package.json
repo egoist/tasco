@@ -3,7 +3,7 @@
   "version": "0.4.4",
   "description": "A modern task runner, with support for monorepo and caching",
   "files": [
-    "./dist"
+    "dist"
   ],
   "bin": "./dist/cli.js",
   "type": "module",
