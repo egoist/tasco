@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Add missing files
 
 ## 0.4.3
 
